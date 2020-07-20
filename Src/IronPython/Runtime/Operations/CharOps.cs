@@ -31,6 +31,10 @@ namespace IronPython.Runtime.Operations {
             return self != other;
         }
 
+        public static bool __lt__(char self, char other) {
+            return self < other;
+        }
+        
         public static int __hash__(char self) {
             return char.ToString(self).GetHashCode();
         }
@@ -40,15 +44,15 @@ namespace IronPython.Runtime.Operations {
         }
 
         [return: MaybeNotImplemented]
-        public static object __cmp__(char self, object other) {
+        public static object __eq__(char self, object other) {
             if (other is char c) {
-                int diff = self - c;
-                return diff > 0 ? 1 : diff < 0 ? -1 : 0;
-            } else if (other is string strOther && strOther.Length == 1) {
-                int diff = self - strOther[0];
-                return diff > 0 ? 1 : diff < 0 ? -1 : 0;
+                return __eq__(self, c);
             }
-
+        
+            if (other is string strOther && strOther.Length == 1) {
+                return __eq__(self, strOther[0]);
+            }
+        
             return NotImplementedType.Value;
         }
 

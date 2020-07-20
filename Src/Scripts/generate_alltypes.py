@@ -221,7 +221,11 @@ public static %(return_type)s %(method_name)s(%(rtype)s x, %(ltype)s y)"""
 simple_body = "return x %(symbol)s y;"
 cast_simple_body = "return (%(type)s)(x %(symbol)s y);"
 
-simple_compare_body = "return x == y ? 0 : x > y ? 1 : -1;"
+simple_eq_body = "return x == y;"
+simple_lt_body = "return x < y;"
+simple_le_body = "return x <= y;"
+simple_gt_body = "return x > y;"
+simple_ge_body = "return x >= y;"
 
 overflow1_body = """\
 %(bigger_type)s result = (%(bigger_type)s)(((%(bigger_type)s)x) %(symbol)s ((%(bigger_type)s)y));
@@ -305,7 +309,7 @@ def write_binop1_general(func, cw, body, name, ty, **kws):
 
 def write_compare(cw, body, name, ty, **kws):
     def writer(cw, body, name, ty, **kws):
-        write_binop_raw(cw, body, 'Compare', ty, **kws)
+        write_binop_raw(cw, body, name, ty, **kws)
 
     write_binop1_general(writer, cw, body, name, ty, **kws)
 
@@ -357,7 +361,11 @@ def gen_binaryops(cw, ty):
 
         cw.writeline()
         cw.write("// Binary Operations - Comparisons")
-        write_compare(cw, simple_compare_body, 'Compare', ty, return_type='int')
+        write_compare(cw, simple_eq_body, '__eq__', ty, return_type='bool')
+        write_compare(cw, simple_lt_body, '__lt__', ty, return_type='bool')
+        write_compare(cw, simple_le_body, '__le__', ty, return_type='bool')
+        write_compare(cw, simple_gt_body, '__gt__', ty, return_type='bool')
+        write_compare(cw, simple_ge_body, '__ge__', ty, return_type='bool')
 
 
 implicit_conv = """\

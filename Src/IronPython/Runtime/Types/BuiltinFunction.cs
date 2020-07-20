@@ -562,34 +562,25 @@ namespace IronPython.Runtime.Types {
                         
         #region Public Python APIs
 
-        public int __cmp__(CodeContext/*!*/ context, [NotNull]BuiltinFunction/*!*/  other) {
+        public bool __eq__(CodeContext /*!*/ context, object other) {
             if (other == this) {
-                return 0;
+                return true;
             }
 
-            if (!IsUnbound && !other.IsUnbound) {
-                int result = PythonOps.Compare(__self__, other.__self__);
-                if (result != 0) {
-                    return result;
+            if (other is BuiltinFunction otherBuiltinFunction) {
+                if (!IsUnbound && !otherBuiltinFunction.IsUnbound) {
+                    int result = PythonOps.Compare(__self__, otherBuiltinFunction.__self__);
+                    if (result != 0) {
+                        return false;
+                    }
+
+                    if (_data == otherBuiltinFunction._data) {
+                        return true;
+                    }
                 }
-
-                if (_data == other._data) {
-                    return 0;
-                }
             }
 
-            int res = String.CompareOrdinal(__name__, other.__name__);
-            if (res != 0) {
-                return res;
-            }
-
-            res = String.CompareOrdinal(Get__module__(context), other.Get__module__(context));
-            if (res != 0) {
-                return res;
-            }
-            
-            long lres = IdDispenser.GetId(this) - IdDispenser.GetId(other);
-            return lres > 0 ? 1 : -1;
+            return false;
         }
 
         [return: MaybeNotImplemented]

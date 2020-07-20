@@ -459,18 +459,18 @@ namespace IronPython.Runtime.Binding {
                 case TrackerTypes.Bound:
                     return new DynamicMetaObject(ReturnBoundTracker((BoundMemberTracker)memberTracker, privateBinding), BindingRestrictions.Empty);
                 case TrackerTypes.Property:
-                    return new DynamicMetaObject(ReturnPropertyTracker((PropertyTracker)memberTracker, privateBinding), BindingRestrictions.Empty);;
+                    return new DynamicMetaObject(ReturnPropertyTracker((PropertyTracker)memberTracker, privateBinding), BindingRestrictions.Empty);
                 case TrackerTypes.Event:
                     return new DynamicMetaObject(Ast.Call(
                         typeof(PythonOps).GetMethod(nameof(PythonOps.MakeBoundEvent)),
                         AstUtils.Constant(PythonTypeOps.GetReflectedEvent((EventTracker)memberTracker)),
                         AstUtils.Constant(null),
                         AstUtils.Constant(type)
-                    ), BindingRestrictions.Empty);;
+                    ), BindingRestrictions.Empty);
                 case TrackerTypes.Field:
-                    return new DynamicMetaObject(ReturnFieldTracker((FieldTracker)memberTracker), BindingRestrictions.Empty);;
+                    return new DynamicMetaObject(ReturnFieldTracker((FieldTracker)memberTracker), BindingRestrictions.Empty);
                 case TrackerTypes.MethodGroup:
-                    return new DynamicMetaObject(ReturnMethodGroup((MethodGroup)memberTracker), BindingRestrictions.Empty); ;
+                    return new DynamicMetaObject(ReturnMethodGroup((MethodGroup)memberTracker), BindingRestrictions.Empty);
                 case TrackerTypes.Constructor:
                     MethodBase[] ctors = PythonTypeOps.GetConstructors(type, privateBinding, true);
                     object val;

@@ -16,10 +16,6 @@ using Microsoft.Scripting.Runtime;
 namespace IronPython.Runtime.Operations {
     public static class DecimalOps {
 
-        public static int __cmp__(CodeContext context, decimal x, decimal other) {
-            return x.CompareTo(other);
-        }
-
         public static bool __bool__(decimal x) {
             return x != 0;
         }
@@ -53,11 +49,11 @@ namespace IronPython.Runtime.Operations {
             return x != y;
         }
 
-        internal static int __cmp__(BigInteger x, decimal y) {
-            return -__cmp__(y, x);
+        internal static int cmp(BigInteger x, decimal y) {
+            return -cmp(y, x);
         }
 
-        internal static int __cmp__(decimal x, BigInteger y) {
+        internal static int cmp(decimal x, BigInteger y) {
             BigInteger bx = (BigInteger)x;
             if (bx == y) {
                 decimal mod = x % 1;
@@ -66,19 +62,6 @@ namespace IronPython.Runtime.Operations {
                 else return -1;
             }
             return bx > y ? +1 : -1;
-        }
-
-        [return: MaybeNotImplemented]
-        internal static object __cmp__(object x, decimal y) {
-            return __cmp__(y, x);
-        }
-
-        [return: MaybeNotImplemented]
-        internal static object __cmp__(decimal x, object y) {
-            if (y is null) {
-                return ScriptingRuntimeHelpers.Int32ToObject(+1);
-            }
-            return NotImplementedType.Value;
         }
 
         public static int __hash__(decimal x) {
@@ -160,7 +143,7 @@ namespace IronPython.Runtime.Operations {
 
                             digits = self.ToString(fmt + "e+00", CultureInfo.InvariantCulture);
                         } else {
-                            // we're including all the numbers to the right of the decimal we can, we explicitly 
+                            // we're including all the numbers to the right of the decimal we can, we explicitly
                             // round to match CPython's behavior
                             int decimalPoints = Math.Max(spec.Precision.Value - digitCnt, 0);
 
@@ -222,7 +205,7 @@ namespace IronPython.Runtime.Operations {
 
                             digits = self.ToString(fmt + (spec.Type == 'G' ? "E+00" : "e+00"), CultureInfo.InvariantCulture);
                         } else {
-                            // we're including all the numbers to the right of the decimal we can, we explicitly 
+                            // we're including all the numbers to the right of the decimal we can, we explicitly
                             // round to match CPython's behavior
                             if (self < 1) {
                                 // no implicit 0

@@ -1016,6 +1016,7 @@ namespace IronPython.Runtime.Binding {
 
             ConditionalBuilder bodyBuilder = new ConditionalBuilder(operation);
 
+            // (fop, rop) = SlotOrFunction.GetCombinedTargets(fop, rop);
             SlotOrFunction.GetCombinedTargets(fop, rop, out fop, out rop);
             SlotOrFunction.GetCombinedTargets(cmp, rcmp, out cmp, out rcmp);
 

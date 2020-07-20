@@ -180,8 +180,24 @@ namespace IronPython.Runtime.Operations {
 
         // Binary Operations - Comparisons
         [SpecialName]
-        public static int Compare(SByte x, SByte y) {
-            return x == y ? 0 : x > y ? 1 : -1;
+        public static bool __eq__(SByte x, SByte y) {
+            return x == y;
+        }
+        [SpecialName]
+        public static bool __lt__(SByte x, SByte y) {
+            return x < y;
+        }
+        [SpecialName]
+        public static bool __le__(SByte x, SByte y) {
+            return x <= y;
+        }
+        [SpecialName]
+        public static bool __gt__(SByte x, SByte y) {
+            return x > y;
+        }
+        [SpecialName]
+        public static bool __ge__(SByte x, SByte y) {
+            return x >= y;
         }
 
         // Conversion operators
@@ -487,16 +503,64 @@ namespace IronPython.Runtime.Operations {
 
         // Binary Operations - Comparisons
         [SpecialName]
-        public static int Compare(Byte x, Byte y) {
-            return x == y ? 0 : x > y ? 1 : -1;
+        public static bool __eq__(Byte x, Byte y) {
+            return x == y;
         }
         [SpecialName]
-        public static int Compare(Byte x, SByte y) {
-            return Int16Ops.Compare((Int16)x, (Int16)y);
+        public static bool __eq__(Byte x, SByte y) {
+            return Int16Ops.__eq__((Int16)x, (Int16)y);
         }
         [SpecialName]
-        public static int Compare(SByte x, Byte y) {
-            return Int16Ops.Compare((Int16)x, (Int16)y);
+        public static bool __eq__(SByte x, Byte y) {
+            return Int16Ops.__eq__((Int16)x, (Int16)y);
+        }
+        [SpecialName]
+        public static bool __lt__(Byte x, Byte y) {
+            return x < y;
+        }
+        [SpecialName]
+        public static bool __lt__(Byte x, SByte y) {
+            return Int16Ops.__lt__((Int16)x, (Int16)y);
+        }
+        [SpecialName]
+        public static bool __lt__(SByte x, Byte y) {
+            return Int16Ops.__lt__((Int16)x, (Int16)y);
+        }
+        [SpecialName]
+        public static bool __le__(Byte x, Byte y) {
+            return x <= y;
+        }
+        [SpecialName]
+        public static bool __le__(Byte x, SByte y) {
+            return Int16Ops.__le__((Int16)x, (Int16)y);
+        }
+        [SpecialName]
+        public static bool __le__(SByte x, Byte y) {
+            return Int16Ops.__le__((Int16)x, (Int16)y);
+        }
+        [SpecialName]
+        public static bool __gt__(Byte x, Byte y) {
+            return x > y;
+        }
+        [SpecialName]
+        public static bool __gt__(Byte x, SByte y) {
+            return Int16Ops.__gt__((Int16)x, (Int16)y);
+        }
+        [SpecialName]
+        public static bool __gt__(SByte x, Byte y) {
+            return Int16Ops.__gt__((Int16)x, (Int16)y);
+        }
+        [SpecialName]
+        public static bool __ge__(Byte x, Byte y) {
+            return x >= y;
+        }
+        [SpecialName]
+        public static bool __ge__(Byte x, SByte y) {
+            return Int16Ops.__ge__((Int16)x, (Int16)y);
+        }
+        [SpecialName]
+        public static bool __ge__(SByte x, Byte y) {
+            return Int16Ops.__ge__((Int16)x, (Int16)y);
         }
 
         // Conversion operators
@@ -724,8 +788,24 @@ namespace IronPython.Runtime.Operations {
 
         // Binary Operations - Comparisons
         [SpecialName]
-        public static int Compare(Int16 x, Int16 y) {
-            return x == y ? 0 : x > y ? 1 : -1;
+        public static bool __eq__(Int16 x, Int16 y) {
+            return x == y;
+        }
+        [SpecialName]
+        public static bool __lt__(Int16 x, Int16 y) {
+            return x < y;
+        }
+        [SpecialName]
+        public static bool __le__(Int16 x, Int16 y) {
+            return x <= y;
+        }
+        [SpecialName]
+        public static bool __gt__(Int16 x, Int16 y) {
+            return x > y;
+        }
+        [SpecialName]
+        public static bool __ge__(Int16 x, Int16 y) {
+            return x >= y;
         }
 
         // Conversion operators
@@ -1034,16 +1114,64 @@ namespace IronPython.Runtime.Operations {
 
         // Binary Operations - Comparisons
         [SpecialName]
-        public static int Compare(UInt16 x, UInt16 y) {
-            return x == y ? 0 : x > y ? 1 : -1;
+        public static bool __eq__(UInt16 x, UInt16 y) {
+            return x == y;
         }
         [SpecialName]
-        public static int Compare(UInt16 x, Int16 y) {
-            return Int32Ops.Compare((Int32)x, (Int32)y);
+        public static bool __eq__(UInt16 x, Int16 y) {
+            return Int32Ops.__eq__((Int32)x, (Int32)y);
         }
         [SpecialName]
-        public static int Compare(Int16 x, UInt16 y) {
-            return Int32Ops.Compare((Int32)x, (Int32)y);
+        public static bool __eq__(Int16 x, UInt16 y) {
+            return Int32Ops.__eq__((Int32)x, (Int32)y);
+        }
+        [SpecialName]
+        public static bool __lt__(UInt16 x, UInt16 y) {
+            return x < y;
+        }
+        [SpecialName]
+        public static bool __lt__(UInt16 x, Int16 y) {
+            return Int32Ops.__lt__((Int32)x, (Int32)y);
+        }
+        [SpecialName]
+        public static bool __lt__(Int16 x, UInt16 y) {
+            return Int32Ops.__lt__((Int32)x, (Int32)y);
+        }
+        [SpecialName]
+        public static bool __le__(UInt16 x, UInt16 y) {
+            return x <= y;
+        }
+        [SpecialName]
+        public static bool __le__(UInt16 x, Int16 y) {
+            return Int32Ops.__le__((Int32)x, (Int32)y);
+        }
+        [SpecialName]
+        public static bool __le__(Int16 x, UInt16 y) {
+            return Int32Ops.__le__((Int32)x, (Int32)y);
+        }
+        [SpecialName]
+        public static bool __gt__(UInt16 x, UInt16 y) {
+            return x > y;
+        }
+        [SpecialName]
+        public static bool __gt__(UInt16 x, Int16 y) {
+            return Int32Ops.__gt__((Int32)x, (Int32)y);
+        }
+        [SpecialName]
+        public static bool __gt__(Int16 x, UInt16 y) {
+            return Int32Ops.__gt__((Int32)x, (Int32)y);
+        }
+        [SpecialName]
+        public static bool __ge__(UInt16 x, UInt16 y) {
+            return x >= y;
+        }
+        [SpecialName]
+        public static bool __ge__(UInt16 x, Int16 y) {
+            return Int32Ops.__ge__((Int32)x, (Int32)y);
+        }
+        [SpecialName]
+        public static bool __ge__(Int16 x, UInt16 y) {
+            return Int32Ops.__ge__((Int32)x, (Int32)y);
         }
 
         // Conversion operators
@@ -1216,8 +1344,24 @@ namespace IronPython.Runtime.Operations {
 
         // Binary Operations - Comparisons
         [SpecialName]
-        public static int Compare(Int32 x, Int32 y) {
-            return x == y ? 0 : x > y ? 1 : -1;
+        public static bool __eq__(Int32 x, Int32 y) {
+            return x == y;
+        }
+        [SpecialName]
+        public static bool __lt__(Int32 x, Int32 y) {
+            return x < y;
+        }
+        [SpecialName]
+        public static bool __le__(Int32 x, Int32 y) {
+            return x <= y;
+        }
+        [SpecialName]
+        public static bool __gt__(Int32 x, Int32 y) {
+            return x > y;
+        }
+        [SpecialName]
+        public static bool __ge__(Int32 x, Int32 y) {
+            return x >= y;
         }
 
         // Conversion operators
@@ -1521,16 +1665,64 @@ namespace IronPython.Runtime.Operations {
 
         // Binary Operations - Comparisons
         [SpecialName]
-        public static int Compare(UInt32 x, UInt32 y) {
-            return x == y ? 0 : x > y ? 1 : -1;
+        public static bool __eq__(UInt32 x, UInt32 y) {
+            return x == y;
         }
         [SpecialName]
-        public static int Compare(UInt32 x, Int32 y) {
-            return Int64Ops.Compare((Int64)x, (Int64)y);
+        public static bool __eq__(UInt32 x, Int32 y) {
+            return Int64Ops.__eq__((Int64)x, (Int64)y);
         }
         [SpecialName]
-        public static int Compare(Int32 x, UInt32 y) {
-            return Int64Ops.Compare((Int64)x, (Int64)y);
+        public static bool __eq__(Int32 x, UInt32 y) {
+            return Int64Ops.__eq__((Int64)x, (Int64)y);
+        }
+        [SpecialName]
+        public static bool __lt__(UInt32 x, UInt32 y) {
+            return x < y;
+        }
+        [SpecialName]
+        public static bool __lt__(UInt32 x, Int32 y) {
+            return Int64Ops.__lt__((Int64)x, (Int64)y);
+        }
+        [SpecialName]
+        public static bool __lt__(Int32 x, UInt32 y) {
+            return Int64Ops.__lt__((Int64)x, (Int64)y);
+        }
+        [SpecialName]
+        public static bool __le__(UInt32 x, UInt32 y) {
+            return x <= y;
+        }
+        [SpecialName]
+        public static bool __le__(UInt32 x, Int32 y) {
+            return Int64Ops.__le__((Int64)x, (Int64)y);
+        }
+        [SpecialName]
+        public static bool __le__(Int32 x, UInt32 y) {
+            return Int64Ops.__le__((Int64)x, (Int64)y);
+        }
+        [SpecialName]
+        public static bool __gt__(UInt32 x, UInt32 y) {
+            return x > y;
+        }
+        [SpecialName]
+        public static bool __gt__(UInt32 x, Int32 y) {
+            return Int64Ops.__gt__((Int64)x, (Int64)y);
+        }
+        [SpecialName]
+        public static bool __gt__(Int32 x, UInt32 y) {
+            return Int64Ops.__gt__((Int64)x, (Int64)y);
+        }
+        [SpecialName]
+        public static bool __ge__(UInt32 x, UInt32 y) {
+            return x >= y;
+        }
+        [SpecialName]
+        public static bool __ge__(UInt32 x, Int32 y) {
+            return Int64Ops.__ge__((Int64)x, (Int64)y);
+        }
+        [SpecialName]
+        public static bool __ge__(Int32 x, UInt32 y) {
+            return Int64Ops.__ge__((Int64)x, (Int64)y);
         }
 
         // Conversion operators
@@ -1765,8 +1957,24 @@ namespace IronPython.Runtime.Operations {
 
         // Binary Operations - Comparisons
         [SpecialName]
-        public static int Compare(Int64 x, Int64 y) {
-            return x == y ? 0 : x > y ? 1 : -1;
+        public static bool __eq__(Int64 x, Int64 y) {
+            return x == y;
+        }
+        [SpecialName]
+        public static bool __lt__(Int64 x, Int64 y) {
+            return x < y;
+        }
+        [SpecialName]
+        public static bool __le__(Int64 x, Int64 y) {
+            return x <= y;
+        }
+        [SpecialName]
+        public static bool __gt__(Int64 x, Int64 y) {
+            return x > y;
+        }
+        [SpecialName]
+        public static bool __ge__(Int64 x, Int64 y) {
+            return x >= y;
         }
 
         // Conversion operators
@@ -2070,16 +2278,64 @@ namespace IronPython.Runtime.Operations {
 
         // Binary Operations - Comparisons
         [SpecialName]
-        public static int Compare(UInt64 x, UInt64 y) {
-            return x == y ? 0 : x > y ? 1 : -1;
+        public static bool __eq__(UInt64 x, UInt64 y) {
+            return x == y;
         }
         [SpecialName]
-        public static int Compare(UInt64 x, Int64 y) {
-            return BigIntegerOps.Compare((BigInteger)x, (BigInteger)y);
+        public static bool __eq__(UInt64 x, Int64 y) {
+            return BigIntegerOps.__eq__((BigInteger)x, (BigInteger)y);
         }
         [SpecialName]
-        public static int Compare(Int64 x, UInt64 y) {
-            return BigIntegerOps.Compare((BigInteger)x, (BigInteger)y);
+        public static bool __eq__(Int64 x, UInt64 y) {
+            return BigIntegerOps.__eq__((BigInteger)x, (BigInteger)y);
+        }
+        [SpecialName]
+        public static bool __lt__(UInt64 x, UInt64 y) {
+            return x < y;
+        }
+        [SpecialName]
+        public static bool __lt__(UInt64 x, Int64 y) {
+            return BigIntegerOps.__lt__((BigInteger)x, (BigInteger)y);
+        }
+        [SpecialName]
+        public static bool __lt__(Int64 x, UInt64 y) {
+            return BigIntegerOps.__lt__((BigInteger)x, (BigInteger)y);
+        }
+        [SpecialName]
+        public static bool __le__(UInt64 x, UInt64 y) {
+            return x <= y;
+        }
+        [SpecialName]
+        public static bool __le__(UInt64 x, Int64 y) {
+            return BigIntegerOps.__le__((BigInteger)x, (BigInteger)y);
+        }
+        [SpecialName]
+        public static bool __le__(Int64 x, UInt64 y) {
+            return BigIntegerOps.__le__((BigInteger)x, (BigInteger)y);
+        }
+        [SpecialName]
+        public static bool __gt__(UInt64 x, UInt64 y) {
+            return x > y;
+        }
+        [SpecialName]
+        public static bool __gt__(UInt64 x, Int64 y) {
+            return BigIntegerOps.__gt__((BigInteger)x, (BigInteger)y);
+        }
+        [SpecialName]
+        public static bool __gt__(Int64 x, UInt64 y) {
+            return BigIntegerOps.__gt__((BigInteger)x, (BigInteger)y);
+        }
+        [SpecialName]
+        public static bool __ge__(UInt64 x, UInt64 y) {
+            return x >= y;
+        }
+        [SpecialName]
+        public static bool __ge__(UInt64 x, Int64 y) {
+            return BigIntegerOps.__ge__((BigInteger)x, (BigInteger)y);
+        }
+        [SpecialName]
+        public static bool __ge__(Int64 x, UInt64 y) {
+            return BigIntegerOps.__ge__((BigInteger)x, (BigInteger)y);
         }
 
         // Conversion operators

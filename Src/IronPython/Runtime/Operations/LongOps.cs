@@ -76,7 +76,7 @@ namespace IronPython.Runtime.Operations {
             if (x is double) return ReturnObject(context, cls, DoubleOps.__long__((double)x));
             if (x is int) return ReturnObject(context, cls, (BigInteger)(int)x);
             if (x is BigInteger) return ReturnObject(context, cls, x);
-            
+
             if (x is Complex) throw PythonOps.TypeError("can't convert complex to long; use long(abs(z))");
 
             if (x is decimal) {
@@ -318,7 +318,7 @@ namespace IronPython.Runtime.Operations {
             // otherwise give the user the truncated result if the result fits in a float
             BigInteger rem;
             BigInteger res = BigInteger.DivRem(x, y, out rem);
-            if (res.TryToFloat64(out fRes)) {                
+            if (res.TryToFloat64(out fRes)) {
                 if(rem != BigInteger.Zero) {
                     // scale remainder so that the fraction could be integer
                     BigInteger fraction = BigInteger.DivRem(rem  << 56, y, out rem); // adding 7 tailing zero bytes, bigger than sys.float_info.mant_dig
@@ -339,7 +339,7 @@ namespace IronPython.Runtime.Operations {
                 }
 
                 return fRes;
-            }            
+            }
 
             // otherwise report an error
             throw PythonOps.OverflowError("integer division result too large for a float");
@@ -510,49 +510,109 @@ namespace IronPython.Runtime.Operations {
         }
 
         [SpecialName]
-        public static int Compare(BigInteger x, BigInteger y) {
-            return x.CompareTo(y);
+        public static bool __eq__(BigInteger x, BigInteger y) {
+            return x == y;
         }
 
         [SpecialName]
-        public static int Compare(BigInteger x, int y) {
-            int ix;
-            if (x.AsInt32(out ix)) {                
-                return ix == y ? 0 : ix > y ? 1 : -1;
-            }
-
-            return BigInteger.Compare(x, y);
+        public static bool __lt__(BigInteger x, BigInteger y) {
+            return x < y;
         }
 
         [SpecialName]
-        public static int Compare(BigInteger x, uint y) {
-            uint ix;
-            if (x.AsUInt32(out ix)) {
-                return ix == y ? 0 : ix > y ? 1 : -1;
-            }
-
-            return BigInteger.Compare(x, y);
+        public static bool __le__(BigInteger x, BigInteger y) {
+            return x <= y;
         }
 
         [SpecialName]
-        public static int Compare(BigInteger x, double y) {
-            return -((int)DoubleOps.Compare(y, x));
+        public static bool __gt__(BigInteger x, BigInteger y) {
+            return x > y;
         }
 
         [SpecialName]
-        public static int Compare(BigInteger x, [NotNull]Extensible<double> y) {
-            return -((int)DoubleOps.Compare(y.Value, x));
+        public static bool __ge__(BigInteger x, BigInteger y) {
+            return x >= y;
+        }
+
+
+        // [SpecialName]
+        // public static int Compare(BigInteger x, int y) {
+        //     int ix;
+        //     if (x.AsInt32(out ix)) {
+        //         return ix == y ? 0 : ix > y ? 1 : -1;
+        //     }
+        //
+        //     return BigInteger.Compare(x, y);
+        // }
+
+        // [SpecialName]
+        // public static int Compare(BigInteger x, uint y) {
+        //     uint ix;
+        //     if (x.AsUInt32(out ix)) {
+        //         return ix == y ? 0 : ix > y ? 1 : -1;
+        //     }
+        //
+        //     return BigInteger.Compare(x, y);
+        // }
+        //
+        [SpecialName]
+        public static bool __eq__(BigInteger x, double y) {
+            return DoubleOps.Compare(x, y) == 0;
         }
 
         [SpecialName]
-        public static int Compare(BigInteger x, decimal y) {            
-            return DecimalOps.__cmp__(x, y);
+        public static bool __lt__(BigInteger x, double y) {
+            return DoubleOps.Compare(x, y) < 0;
         }
 
         [SpecialName]
-        public static int Compare(BigInteger x, bool y) {
-            return Compare(x, y ? 1 : 0);
+        public static bool __le__(BigInteger x, double y) {
+            return DoubleOps.Compare(x, y) <= 0;
         }
+
+        [SpecialName]
+        public static bool __gt__(BigInteger x, double y) {
+            return DoubleOps.Compare(x, y) > 0;
+        }
+
+        [SpecialName]
+        public static bool __ge__(BigInteger x, double y) {
+            return DoubleOps.Compare(x, y) >= 0;
+        }
+
+        // [SpecialName]
+        // public static int Compare(BigInteger x, [NotNull]Extensible<double> y) {
+        //     return -((int)DoubleOps.Compare(y.Value, x));
+        // }
+
+        [SpecialName]
+        public static bool __eq__(BigInteger x, decimal y) {
+            return DecimalOps.cmp(x, y) == 0;
+        }
+
+        [SpecialName]
+        public static bool __lt__(BigInteger x, decimal y) {
+            return DecimalOps.cmp(x, y) < 0;
+        }
+
+        [SpecialName]
+        public static bool __le__(BigInteger x, decimal y) {
+            return DecimalOps.cmp(x, y) <= 0;
+        }
+
+        [SpecialName]
+        public static bool __gt__(BigInteger x, decimal y) {
+            return DecimalOps.cmp(x, y) > 0;
+        }
+
+        [SpecialName]
+        public static bool __ge__(BigInteger x, decimal y) {
+            return DecimalOps.cmp(x, y) >= 0;
+        }
+        // [SpecialName]
+        // public static int Compare(BigInteger x, bool y) {
+        //     return Compare(x, y ? 1 : 0);
+        // }
 
         public static BigInteger __long__(BigInteger self) {
             return self;
@@ -592,7 +652,7 @@ namespace IronPython.Runtime.Operations {
         }
 
         #region Binary Ops
-        
+
         [PythonHidden]
         public static BigInteger Xor(BigInteger x, BigInteger y) {
             return x ^ y;
@@ -656,7 +716,7 @@ namespace IronPython.Runtime.Operations {
         public static bool AsUInt64(BigInteger self, out ulong res) {
             return self.AsUInt64(out res);
         }
-        
+
         #endregion
 
         #region Direct Conversions
@@ -866,7 +926,7 @@ namespace IronPython.Runtime.Operations {
                 val = -self;
             }
             string digits;
-            
+
             switch (spec.Type) {
                 case 'n':
                     CultureInfo culture = context.LanguageContext.NumericCulture;
@@ -1052,7 +1112,7 @@ namespace IronPython.Runtime.Operations {
             return ToDigits(val, 8, lowercase);
         }
 
-        internal static string ToBinary(BigInteger val) {            
+        internal static string ToBinary(BigInteger val) {
             string res = ToBinary(val.Abs(), true, true);
             if (val.IsNegative()) {
                 res = "-" + res;
@@ -1064,7 +1124,7 @@ namespace IronPython.Runtime.Operations {
             Debug.Assert(!val.IsNegative());
 
             string digits = ToDigits(val, 2, lowercase);
-            
+
             if (includeType) {
                 digits = (lowercase ? "0b" : "0B") + digits;
             }
@@ -1079,7 +1139,7 @@ namespace IronPython.Runtime.Operations {
 
             StringBuilder tmp = new StringBuilder();
             tmp.Append(digits[0]);
-            
+
             for (int i = 1; i < maxPrecision && i < digits.Length; i++) {
                 // append if we have a significant digit or if we are forcing a minimum precision
                 if (digits[i] != '0' || i <= minPrecision) {
@@ -1146,7 +1206,7 @@ namespace IronPython.Runtime.Operations {
             for (int i = str.Length - 1; i >= 0; i--) {
                 res.Append(str[i]);
             }
-            
+
             return res.ToString();
         }
     }

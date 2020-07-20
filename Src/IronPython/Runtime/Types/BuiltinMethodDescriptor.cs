@@ -78,7 +78,7 @@ namespace IronPython.Runtime.Types {
         internal static void CheckSelfWorker(CodeContext/*!*/ context, object self, BuiltinFunction template) {
             // to a fast check on the CLR types, if they match we can avoid the slower
             // check that involves looking up dynamic types. (self can be null on
-            // calls like set.add(None) 
+            // calls like set.add(None)
             Type selfType = CompilerHelpers.GetType(self);
             if (selfType != template.DeclaringType && !template.DeclaringType.IsAssignableFrom(selfType)) {
                 // if a conversion exists to the type allow the call.
@@ -103,7 +103,7 @@ namespace IronPython.Runtime.Types {
         }
 
         #endregion
-        
+
         #region Public Python API
 
         public string __name__ {
@@ -136,19 +136,6 @@ namespace IronPython.Runtime.Types {
                 return false;
             }
             return __name__ == bmd.__name__;
-        }
-
-        public int __cmp__(object other) {
-            if (!(other is BuiltinMethodDescriptor bmd)) {
-                throw PythonOps.TypeError("method.__cmp__(x,y) requires y to be a 'instancemethod', not a {0}", PythonTypeOps.GetName(other));
-            }
-
-            long result = PythonOps.Id(__objclass__) - PythonOps.Id(bmd.__objclass__);
-            if (result != 0) {
-                return (result > 0) ? 1 : -1;
-            }
-            
-            return StringOps.Compare(__name__, bmd.__name__);
         }
 
         #endregion
