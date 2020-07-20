@@ -215,13 +215,13 @@ namespace IronPython.Runtime.Binding {
         #region Unary Operations
 
         /// <summary>
-        /// Creates a rule for the contains operator.  This is exposed via "x in y" in 
+        /// Creates a rule for the contains operator.  This is exposed via "x in y" in
         /// IronPython.  It is implemented by calling the __contains__ method on x and
-        /// passing in y.  
-        /// 
-        /// If a type doesn't define __contains__ but does define __getitem__ then __getitem__ is 
+        /// passing in y.
+        ///
+        /// If a type doesn't define __contains__ but does define __getitem__ then __getitem__ is
         /// called repeatedly in order to see if the object is there.
-        /// 
+        ///
         /// For normal .NET enumerables we'll walk the iterator and see if it's present.
         /// </summary>
         private static DynamicMetaObject/*!*/ MakeContainsOperation(PythonOperationBinder/*!*/ operation, DynamicMetaObject/*!*/[]/*!*/ types) {
@@ -676,7 +676,7 @@ namespace IronPython.Runtime.Binding {
         }
 
         private static DynamicMetaObject/*!*/ MakeIscallableOperation(PythonOperationBinder/*!*/ operation, DynamicMetaObject/*!*/[]/*!*/ args) {
-            // Certain non-python types (encountered during interop) are callable, but don't have 
+            // Certain non-python types (encountered during interop) are callable, but don't have
             // a __call__ attribute. The default base binder also checks these, but since we're overriding
             // the base binder, we check them here.
             DynamicMetaObject self = args[0];
@@ -953,7 +953,7 @@ namespace IronPython.Runtime.Binding {
 
         private static void MakeSlotCallWorker(PythonContext/*!*/ state, PythonTypeSlot/*!*/ slotTarget, Expression/*!*/ self, ConditionalBuilder/*!*/ bodyBuilder, params Expression/*!*/[]/*!*/ args) {
             // Generate:
-            // 
+            //
             // SlotTryGetValue(context, slot, selfType, out callable) && (tmp=callable(args)) != NotImplemented) ?
             //      tmp :
             //      RestOfOperation
@@ -1007,21 +1007,17 @@ namespace IronPython.Runtime.Binding {
             string opSym = Symbols.OperatorToSymbol(op);
             string ropSym = Symbols.OperatorToReversedSymbol(op);
             // reverse
-            DynamicMetaObject[] rTypes = new DynamicMetaObject[] { types[1], types[0] };
+            DynamicMetaObject[] rTypes = { types[1], types[0] };
 
             SlotOrFunction fop = SlotOrFunction.GetSlotOrFunction(state, opSym, types);
             SlotOrFunction rop = SlotOrFunction.GetSlotOrFunction(state, ropSym, rTypes);
-            SlotOrFunction cmp = SlotOrFunction.GetSlotOrFunction(state, "__cmp__", types);
-            SlotOrFunction rcmp = SlotOrFunction.GetSlotOrFunction(state, "__cmp__", rTypes);
 
             ConditionalBuilder bodyBuilder = new ConditionalBuilder(operation);
 
-            // (fop, rop) = SlotOrFunction.GetCombinedTargets(fop, rop);
             SlotOrFunction.GetCombinedTargets(fop, rop, out fop, out rop);
-            SlotOrFunction.GetCombinedTargets(cmp, rcmp, out cmp, out rcmp);
 
             bool shouldWarn = false;
-            
+
             // if the left operand is an instance of a built-in type or a new-style class, and the right operand is an instance of a proper subclass of that type or class
             // and overrides the base's __rop__() method, the right operand's __rop__() method is tried before the left operand's __op__() method.
             PythonType xPythonType = MetaPythonObject.GetPythonType(xType);
@@ -1039,37 +1035,10 @@ namespace IronPython.Runtime.Binding {
             if (MakeOneCompareGeneric(fop, opReverse, types, MakeCompareReturn, bodyBuilder, typeof(object))) {
                 shouldWarn = shouldWarn || rop.ShouldWarn(state, out info);
                 if (MakeOneCompareGeneric(rop, !opReverse, types, MakeCompareReturn, bodyBuilder, typeof(object))) {
-
-                    // then try __cmp__ or __rcmp__ and compare the resulting int appropriaetly
-                    shouldWarn = shouldWarn || cmp.ShouldWarn(state, out info);
-
-                    if (MakeOneCompareGeneric(
-                        cmp,
-                        false,
-                        types,
-                        delegate(ConditionalBuilder builder, Expression retCond, Expression expr, bool reverse, Type retType) {
-                            MakeCompareTest(op, builder, retCond, expr, reverse, retType);
-                        },
-                        bodyBuilder,
-                        typeof(object))) {
-
-                        shouldWarn = shouldWarn || rcmp.ShouldWarn(state, out info);
-
-                        if (MakeOneCompareGeneric(
-                            rcmp,
-                            true,
-                            types,
-                            delegate(ConditionalBuilder builder, Expression retCond, Expression expr, bool reverse, Type retType) {
-                                MakeCompareTest(op, builder, retCond, expr, reverse, retType);
-                            },
-                            bodyBuilder,
-                            typeof(object))) {
-                            if (errorSuggestion != null) {
-                                bodyBuilder.FinishCondition(errorSuggestion.Expression, typeof(object));
-                            } else {
-                                bodyBuilder.FinishCondition(BindingHelpers.AddPythonBoxing(MakeFallbackCompare(operation, op, types)), typeof(object));
-                            }
-                        }
+                    if (errorSuggestion != null) {
+                        bodyBuilder.FinishCondition(errorSuggestion.Expression, typeof(object));
+                    } else {
+                        bodyBuilder.FinishCondition(BindingHelpers.AddPythonBoxing(MakeFallbackCompare(operation, op, types)), typeof(object));
                     }
                 }
             }
@@ -1093,10 +1062,10 @@ namespace IronPython.Runtime.Binding {
                 return fastPath;
             }
 
-            // Python compare semantics: 
+            // Python compare semantics:
             //      if the types are the same invoke __cmp__ first.
             //      If __cmp__ is not defined or the types are different:
-            //          try rich comparisons (eq, lt, gt, etc...) 
+            //          try rich comparisons (eq, lt, gt, etc...)
             //      If the types are not the same and rich cmp didn't work finally try __cmp__
             //      If __cmp__ isn't defined return a comparison based upon the types.
             //
@@ -1106,7 +1075,7 @@ namespace IronPython.Runtime.Binding {
 
             // collect all the comparison methods, most likely we won't need them all.
             DynamicMetaObject[] rTypes = new DynamicMetaObject[] { types[1], types[0] };
-            
+
             PythonContext state = PythonContext.GetPythonContext(operation);
             SlotOrFunction cfunc = SlotOrFunction.GetSlotOrFunction(state, "__cmp__", types);
             SlotOrFunction rcfunc = SlotOrFunction.GetSlotOrFunction(state, "__cmp__", rTypes);
@@ -1336,18 +1305,18 @@ namespace IronPython.Runtime.Binding {
         ///    Simple Slicing x[i:j]
         ///    Extended slicing x[i,j,k,...]
         ///    Long Slice x[start:stop:step]
-        /// 
+        ///
         /// These protocols map to __*item__ (get, set, and del).
-        ///    This receives a single index which is either a Tuple or a Slice object (which 
-        ///    encapsulates the start, stop, and step values) 
-        /// 
+        ///    This receives a single index which is either a Tuple or a Slice object (which
+        ///    encapsulates the start, stop, and step values)
+        ///
         /// This is in addition to a simple indexing x[y].
-        /// 
+        ///
         /// For simple slicing and long slicing Python generates Operators.*Slice.  For
         /// the extended slicing and simple indexing Python generates a Operators.*Item
         /// action.
-        /// 
-        /// Extended slicing maps to the normal .NET multi-parameter input.  
+        ///
+        /// Extended slicing maps to the normal .NET multi-parameter input.
         /// </summary>
         private static DynamicMetaObject/*!*/ MakeIndexerOperation(DynamicMetaObjectBinder/*!*/ operation, PythonIndexType op, DynamicMetaObject/*!*/[]/*!*/ types, DynamicMetaObject errorSuggestion) {
             string item;
@@ -1422,15 +1391,15 @@ namespace IronPython.Runtime.Binding {
         private static DynamicMetaObject/*!*/[]/*!*/ GetItemSliceArguments(PythonContext state, PythonIndexType op, DynamicMetaObject/*!*/[]/*!*/ types) {
             DynamicMetaObject[] args;
             if (op == PythonIndexType.SetSlice) {
-                args = new DynamicMetaObject[] { 
+                args = new DynamicMetaObject[] {
                     types[0].Restrict(types[0].GetLimitType()),
-                    GetSetSlice(state, types), 
+                    GetSetSlice(state, types),
                     types[types.Length- 1].Restrict(types[types.Length - 1].GetLimitType())
                 };
             } else {
                 Debug.Assert(op == PythonIndexType.GetSlice || op == PythonIndexType.DeleteSlice);
 
-                args = new DynamicMetaObject[] { 
+                args = new DynamicMetaObject[] {
                     types[0].Restrict(types[0].GetLimitType()),
                     GetGetOrDeleteSlice(state, types)
                 };
@@ -1440,7 +1409,7 @@ namespace IronPython.Runtime.Binding {
 
         /// <summary>
         /// Base class for calling indexers.  We have two subclasses that target built-in functions and user defined callable objects.
-        /// 
+        ///
         /// The Callable objects get handed off to ItemBuilder's which then call them with the appropriate arguments.
         /// </summary>
         private abstract class Callable {
@@ -1472,8 +1441,8 @@ namespace IronPython.Runtime.Binding {
 
             /// <summary>
             /// Gets the arguments in a form that should be used for extended slicing.
-            /// 
-            /// Python defines that multiple tuple arguments received (x[1,2,3]) get 
+            ///
+            /// Python defines that multiple tuple arguments received (x[1,2,3]) get
             /// packed into a Tuple.  For most .NET methods we just want to expand
             /// this into the multiple index arguments.  For slots and old-instances
             /// we want to pass in the tuple
@@ -2018,7 +1987,7 @@ namespace IronPython.Runtime.Binding {
 
                 Expression error = action.Throw(
                     Ast.Call(
-                        typeof(PythonOps).GetMethod(nameof(PythonOps.SimpleTypeError)),   
+                        typeof(PythonOps).GetMethod(nameof(PythonOps.SimpleTypeError)),
                         Ast.Constant(message)
                     ),
                     typeof(object)
