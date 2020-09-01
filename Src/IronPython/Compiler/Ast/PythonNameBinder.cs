@@ -241,7 +241,7 @@ namespace IronPython.Compiler.Ast {
                     dec.Walk(this);
                 }
             }
-            
+
             PushScope(node);
 
             node.ModuleNameVariable = _globalScope.EnsureGlobalVariable("__name__");
@@ -575,14 +575,14 @@ namespace IronPython.Compiler.Ast {
         public override bool Walk(BreakStatement node) {
             node.Parent = _currentScope;
             node.LoopStatement = _loops[_loops.Count - 1];
-            
+
             return base.Walk(node);
         }
 
         public override bool Walk(ContinueStatement node) {
             node.Parent = _currentScope;
             node.LoopStatement = _loops[_loops.Count - 1];
-            
+
             return base.Walk(node);
         }
 
@@ -633,12 +633,12 @@ namespace IronPython.Compiler.Ast {
         // FunctionDefinition
         public override bool Walk(FunctionDefinition node) {
             node._nameVariable = _globalScope.EnsureGlobalVariable("__name__");
-            
+
             // Name is defined in the enclosing context
             if (!node.IsLambda) {
                 node.PythonVariable = DefineName(node.Name);
             }
-            
+
             // process the default arg values in the outer context
             foreach (Parameter p in node.Parameters) {
                 p.DefaultValue?.Walk(this);
@@ -746,7 +746,14 @@ namespace IronPython.Compiler.Ast {
                     ReportSyntaxError($"name '{n}' is used prior to nonlocal declaration", node);
                 }
 
-                // TODO: do we need to do other stuff here?
+                for (var scope = _currentScope.Parent; !scope.IsGlobal ; scope = scope.Parent) {
+                    if (scope.Variables.TryGetValue(n, out var variable)) {
+                        // found the variable in outer scope
+                        _currentScope.AddGlobalVariable(variable);
+                        return true;
+                    }
+                }
+                ReportSyntaxError($" no binding for nonlocal '{n}' found", node);
             }
             return true;
         }
